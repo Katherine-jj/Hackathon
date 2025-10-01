@@ -1,0 +1,442 @@
+body {
+    margin-left: 30px !important;
+    margin-right: 30px !important;
+    margin-top: 30px;
+    font-family: "Inter", sans-serif;
+}
+
+header {
+    background-color: #007aff;
+    width: 100%;
+    height: 92px;
+    top: 0;
+    z-index: 1001;
+    position: sticky;
+    border-radius: 5px;
+}
+
+.headers {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;           
+    height: 100%;                   
+    padding: 0 30px;
+}
+
+.headers .center {
+    flex: 1;
+    text-align: center;
+}
+
+.HeaderStyleText {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    font-size: 16px;
+    margin: 0;
+}
+
+.HeaderButton button,
+.HeaderButton1 button {
+    padding: 8px 20px;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    outline: none;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+
+.HeaderButton button {
+    background: transparent;       
+    color: white;
+    border: 1px solid white;      
+}
+.HeaderButton button:hover:not(.active) {
+    background:#0F2B62;
+    box-shadow: 0 4px 6px #03020A40;
+}
+
+.HeaderButton1 button {
+    background: transparent;
+    color: white;
+    border: 1px solid white;
+}
+.HeaderButton1 button:hover:not(.active) {
+    background: #0F2B62;
+    box-shadow: 0 4px 6px #03020A40;
+}
+
+.HeaderButton button.active,
+.HeaderButton1 button.active {
+    background: white;
+    color: #0F2B62;
+    border: none;
+    box-shadow: 0 4px 6px #03020A40;
+}
+
+
+
+
+.statsContainer {
+    width: 567px;            
+    height: 223.2px;            
+    display: flex;
+    justify-content: center;  
+    align-items: center;      
+    border: 1px solid #81B3FF;
+    border-radius: 5px;
+    padding: 0;             
+    box-sizing: border-box;
+    gap: 0;                  
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.statBlock {
+    width: 50%;              
+    height: 100%;            
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  
+    align-items: center;    
+    padding: 0 20px;          
+    margin-top:0px;
+    box-sizing: border-box;
+    gap:10px;
+    text-align: center;
+}
+
+.statBlock1 {
+    width: 50%;              
+    height: 100%;            
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  
+    align-items: center;    
+    padding: 0 20px;          
+    margin-top:0px;
+    box-sizing: border-box;
+    gap:30px;
+    text-align: center;
+}
+
+.textBlue {
+    font-size: 16px;    
+    color: #81B3FF;
+    margin: 0 0 20px 0;  
+    font-weight: 400;    
+}
+
+.textBlue1 p {
+    font-size: 16px;    
+    color: #81B3FF;
+    padding-top:0px;
+    font-weight: 400;    
+    margin: 0px;
+    padding: 0 0 20px 0;
+}
+
+
+.statsText {
+    font-size: 40px;
+    font-family:"Days One", sans-serif;
+    color: #2C7FFF;
+    margin: 0;
+}
+
+.divider {
+    width: 1px;
+    background-color: #81B3FF;
+    height: 75%;             
+    position: absolute;
+    left: 50%;             
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+
+button{
+    width:203px;
+    height:47px;
+    padding:5px;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+
+.component1 {
+    position: relative;
+    display: flex;
+    gap: 40px;   
+    justify-content: center;
+    margin-top: 40px;
+}
+
+
+.DashBoardWithBar {
+    width: 567px;
+    height: 443px;
+    border: 1px solid #81B3FF; 
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    padding: 20px; 
+    box-sizing: border-box;
+    margin-bottom: 40px; 
+}
+
+.DashBoardWithBar h2 {
+    text-align: center; 
+    margin-bottom: 20px;
+}
+
+.DashBoard {
+    position: relative; 
+    height: 192px;
+    border: 1px solid #81B3FF;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 40px; 
+}
+
+
+.Choise {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; 
+    width: 567px; 
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.Buttons {
+    display: flex;
+    justify-content: flex-end; 
+    gap: 12px;
+    margin-top: 21px;
+}
+
+.dropdown-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-family: Arial, sans-serif;
+}
+
+.dropdown {
+    width: 181px;
+    height: 36px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    border: 1px solid #000;
+    border-radius: 6px;
+    padding: 0 12px;
+    appearance: none;
+    background: white
+        url("data:image/svg+xml;utf8,<svg fill='black' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>")
+        no-repeat right 10px center;
+    background-size: 18px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.dropdown:hover {
+    border-color: #007aff;
+}
+
+.date-filter {
+    display: flex;
+    gap: 10px ;
+    align-items: center;
+}
+
+.date-filter input {
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #000;
+}
+
+.date-filter button {
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: none;
+    background-color: #007aff;
+    color: white;
+    cursor: pointer;
+}
+
+.date-filter button:hover {
+    background-color: #005bb5;
+}
+
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    height: 80vh;            
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 700px;
+    padding: 30px;
+    border: 1px solid #2c7fff;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.form-title {
+    text-align: center;
+    font-size: 20px;
+    color: #2c7fff;
+    margin-bottom: 27px;
+}
+
+.form-container input {
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #2c7fff;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+.form-container input:focus {
+    border-color: #005bb5;
+    box-shadow: 0 0 4px rgba(44, 127, 255, 0.5);
+}
+
+.form-button {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #2c7fff;
+    border-radius: 6px;
+    background: white;
+    color: #2c7fff;
+    cursor: pointer;
+    transition: all 0.2s;
+    align-items: center;
+    margin-top: 27px;
+}
+
+.form-button:hover {
+    background: #2c7fff;
+    color: white;
+}
+
+.buttonwrapper{
+    display: flex;
+    justify-content: center; 
+    width: 100%;
+}
+
+.link-btn {
+    background: none;
+    border: none;
+    color: #2c7fff;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+}
+
+.link-btn:hover {
+    text-decoration: underline;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    margin: -8px 0 5px 0;
+}
+
+.flightInfoBlock {
+    width: 1046px;
+    height: 165px;
+    border: 1px solid #81B3FF;
+    border-radius: 6px;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    box-sizing: border-box;
+    margin-top:30px;
+}
+
+.infoCard {
+    border: 1px solid #81B3FF;
+    height: 55.9px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.label{
+    font-size: 14px;
+    color: #81B3FF;
+    margin: 5px 0 5px 0;
+    padding:0px;
+}
+
+.value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2C7FFF;
+    margin-bottom: 10px;
+    margin-top:0px;
+}
+
+.AppContent {
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.MapPlace{
+    margin-top:40px;
+}
+
+.twoColumns {
+    display: flex;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.leftColumn,
+.rightColumn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.download-btn {
+    width: 181px;        
+    height: 36px;       
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    border-radius: 6px;
+    border: solid 1px #2C7FFF;
+    background-color: white;
+    color: #2C7FFF;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.download-btn:hover {
+    background-color: #CCE0FF;
+}
+
+
+

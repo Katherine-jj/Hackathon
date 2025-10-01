@@ -1,0 +1,39 @@
+{
+  "name": "dashboard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^4.29.19",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "downloadjs": "^1.4.7",
+    "express": "^5.1.0",
+    "html-to-image": "^1.11.13",
+    "leaflet": "^1.9.4",
+    "pg": "^8.16.3",
+    "react": "^18.3.1",
+    "react-date-range": "^2.0.1",
+    "react-dom": "^18.3.1",
+    "react-leaflet": "^4.2.1",
+    "react-router-dom": "^7.9.3",
+    "recharts": "^2.15.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.9"
+  },
+  "description": "touch README.md git init git add README.md git commit -m \"first commit\" git remote add origin http://194.87.140.69:3000/Elise/dashboard.git git push -u origin master",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
