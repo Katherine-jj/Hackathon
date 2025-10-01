@@ -6,7 +6,7 @@ from parser import parse_excel
 
 router = APIRouter()
 
-@router.post("/upload/")
+@router.post("http://backend:8000/flights/import-xlsx")
 async def upload_file(file: UploadFile = File(...)):
     try:
         contents = await file.read()
