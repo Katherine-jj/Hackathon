@@ -6,8 +6,7 @@ from typing import List, Literal
 from datetime import datetime
 from geoalchemy2 import functions as geofunc
 
-import database
-import crud
+from upload import router as upload_router
 from database import SessionLocal, engine, Base
 from models import Flight
 from crud import create_flight, get_flights
@@ -19,7 +18,7 @@ from schemas import FlightType, City, StatsResponse,  FlightResponse
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
+app.include_router(upload_router)
 
 # --- CORS ---
 origins = [
@@ -27,7 +26,7 @@ origins = [
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

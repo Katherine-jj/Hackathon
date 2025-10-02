@@ -1,0 +1,10 @@
+# Node.js
+front/node_modules/
+front/.env
+
+# Logs
+*.log
+
+# Build
+front/dist/
+front/build/

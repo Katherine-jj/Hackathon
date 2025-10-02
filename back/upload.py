@@ -6,7 +6,7 @@ from parser import parse_excel
 
 router = APIRouter()
 
-@router.post("http://backend:8000/flights/import-xlsx")
+@router.post("/flights/import-xlsx")
 async def upload_file(file: UploadFile = File(...)):
     try:
         contents = await file.read()
@@ -19,7 +19,7 @@ async def upload_file(file: UploadFile = File(...)):
             dbname="dashboard",
             user="postgres",
             password="root",
-            host="localhost",
+            host="db",
             port="5432"
         )
         cur = conn.cursor()
