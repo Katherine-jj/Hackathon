@@ -1,10 +1,12 @@
 # parser.py
+# --- Модуль для парсинга сообщений и Excel файлов с рейсами ---
+
 import re
 import pandas as pd
 from datetime import datetime, timedelta, time
 from io import BytesIO
 
-# --- Словарь регион → город ---
+# --- Словарь: регион → город ---
 region_to_city = {
     "Санкт-Петербургский": "Санкт-Петербург",
     "Ростовский": "Ростов-на-Дону",
@@ -24,8 +26,11 @@ region_to_city = {
 }
 
 # --- Вспомогательные функции ---
+
 def convert_coord(coord: str) -> tuple | None:
-    """DDMMNDDDMME → (lat, lon)"""
+    """
+    Конвертирует координаты из формата DDMMNDDDMME → (lat, lon)
+    """
     m = re.match(r"(\d{2})(\d{2})([NS])(\d{3})(\d{2})([EW])", coord)
     if not m:
         return None
@@ -41,11 +46,10 @@ def convert_coord(coord: str) -> tuple | None:
 
     return lat, lon
 
-
-
-
 def normalize_time(t: str | None) -> time | None:
-    """Приводим строку из Excel к объекту datetime.time"""
+    """
+    Преобразует строку времени из Excel в объект datetime.time
+    """
     if not t:
         return None
     t = re.sub(r'\D', '', str(t))
@@ -56,39 +60,50 @@ def normalize_time(t: str | None) -> time | None:
             return None
     return None
 
-
 def calc_duration(dep_time: time | None, arr_time: time | None, flight_date) -> timedelta | None:
+    """
+    Вычисляет длительность рейса по времени взлета и посадки
+    """
     if dep_time and arr_time:
         dep_dt = datetime.combine(flight_date, dep_time)
         arr_dt = datetime.combine(flight_date, arr_time)
-        if arr_dt < dep_dt:
+        if arr_dt < dep_dt:  # если прилет после полуночи
             arr_dt += timedelta(days=1)
         return arr_dt - dep_dt
     return None
 
 def parse_str(value):
-    """Приводим к строке, даже если None"""
+    """Приводит значение к строке, даже если None"""
     return str(value) if value is not None else ""
 
-
 def parse_duration(value):
+    """
+    Преобразует длительность в timedelta:
+    - если число → минуты
+    - если строка "HH:MM:SS" → timedelta
+    """
     if not value or str(value).strip() in ["", "0", "0.0"]:
         return timedelta(seconds=0)
     try:
-        # если значение в минутах
         minutes = int(value)
         return timedelta(minutes=minutes)
     except ValueError:
-        # fallback: попробуем как строку "HH:MM:SS"
         try:
             h, m, s = map(int, str(value).split(":"))
             return timedelta(hours=h, minutes=m, seconds=s)
         except Exception:
             return timedelta(seconds=0)
 
-
 # --- Парсинг одного сообщения ---
+
 def parse_message(msg: str, region: str = None) -> dict:
+    """
+    Парсит строку сообщения о рейсе и возвращает словарь с данными:
+    - flight_id, uav_type, reg_number
+    - дата, время взлета и посадки, длительность
+    - координаты взлета, посадки и маршрута
+    - город и высоты
+    """
     result = {
         "flight_id": None,
         "uav_type": None,
@@ -96,7 +111,7 @@ def parse_message(msg: str, region: str = None) -> dict:
         "date": None,
         "dep_time": None,
         "arr_time": None,
-        "duration": timedelta(seconds=0),  # <-- вместо "0"
+        "duration": timedelta(seconds=0),
         "dep_coord": "",
         "dest_coord": "",
         "city": region,
@@ -105,24 +120,20 @@ def parse_message(msg: str, region: str = None) -> dict:
         "route_coords": "",
     }
 
-
     # Высоты
     if m := re.search(r"-M(\d{4})/M(\d{4})", msg):
         result["min_alt"], result["max_alt"] = map(int, m.groups())
 
-   # Маршрут
+    # Маршрут
     coords = re.findall(r"\d{4}[NS]\d{5}[EW]", msg)
     converted = [convert_coord(c) for c in coords]
     converted = [c for c in converted if c]  # убираем None
 
-    # Если точек меньше 2, ставим None
     if len(converted) < 2:
         result["route_coords"] = None
     else:
-        # Формируем LINESTRING из координат (lon lat)
         linestring = ", ".join(f"{lon} {lat}" for lat, lon in converted)
         result["route_coords"] = f"LINESTRING({linestring})"
-
 
     # Основные поля
     if m := re.search(r"SID/([\w\d]+)", msg):
@@ -145,7 +156,7 @@ def parse_message(msg: str, region: str = None) -> dict:
         flight_date = result["date"] or datetime.today().date()
         result["duration"] = calc_duration(result["dep_time"], result["arr_time"], flight_date)
 
-    # DEP / DEST
+    # DEP / DEST координаты
     for key, prefix in [("dep_coord", "DEP"), ("dest_coord", "DEST")]:
         if m := re.search(fr"{prefix}/(\d{{4,5}}[NS]\d{{4,5}}[EW])", msg):
             if (latlon := convert_coord(m.group(1))):
@@ -154,9 +165,14 @@ def parse_message(msg: str, region: str = None) -> dict:
 
     return result
 
-
 # --- Парсинг Excel ---
+
 def parse_excel(file_bytes: bytes, sheet_name=0) -> pd.DataFrame:
+    """
+    Парсит Excel файл с рейсами:
+    - Первый столбец: регион
+    - Остальные столбцы: сообщения
+    """
     df = pd.read_excel(BytesIO(file_bytes), sheet_name=sheet_name)
     parsed_rows = []
 

@@ -15,6 +15,12 @@ type Props = {
   subtitle?: string;
 };
 
+type MetricsChartProps = {
+  data: { name: string; value: number }[];
+  uavType?: string;
+  region?: string;
+};
+
 export const MetricsChart = ({ data, title, subtitle }: Props) => {
   return (
     <div className="DashboardStats">

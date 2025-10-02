@@ -42,7 +42,7 @@ function App() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://backend:8000/flights/import-xlsx", {
+      const response = await fetch("http://localhost:8000/flights/import-xlsx", {
         method: "POST",
         body: formData,
       });
@@ -75,7 +75,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetch("http://backend:8000/flights/types")
+    fetch("http://localhost:8000/flights/types")
       .then((res) => res.json())
       .then((data) =>
         setUavTypes(data.map((f: any) => ({ value: f.uav_type, label: f.uav_type })))
@@ -84,7 +84,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetch("http://backend:8000/flights/cities")
+    fetch("http://localhost:8000/flights/cities")
       .then((res) => res.json())
       .then((data) =>
         setRegions(data.map((f: any) => ({ value: f.city, label: f.city })))
@@ -93,7 +93,7 @@ function App() {
   }, []);
 
   const fetchStats = () => {
-    let url = "http://backend:8000/flights/stats?";
+    let url = "http://localhost:8000/flights/stats?";
     const params = new URLSearchParams();
 
     if (selectedUav) params.append("uav_type", selectedUav);

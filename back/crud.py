@@ -1,4 +1,5 @@
-# CRUD.py - файл для работы с базой данных C-create R - read U- update D-delete
+# CRUD.py - файл для работы с базой данных
+# C - Create, R - Read, U - Update, D - Delete
 
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -10,22 +11,28 @@ from shapely.wkb import dumps
 from datetime import time, timedelta
 from shapely.geometry import mapping
 
-# чистка значений для загрузки в БД
+# --- Функции для работы с данными ---
+
 def clean_flight_data(flight_dict: dict) -> dict:
+    """
+    Приводит значения рейса к корректному виду для базы данных:
+    - пустые строки → None
+    - NaN → None
+    """
     cleaned = {}
     for key, value in flight_dict.items():
-        # пустая строка → None
         if isinstance(value, str) and value.strip() == "":
             cleaned[key] = None
-        # NaN → None
         elif isinstance(value, float) and math.isnan(value):
             cleaned[key] = None
         else:
             cleaned[key] = value
     return cleaned
 
-# функция загрузки в БД
 def create_flight(db: Session, flight: schemas.FlightCreate):
+    """
+    Создает новый объект Flight в базе данных.
+    """
     data = clean_flight_data(flight.dict())
     db_flight = models.Flight(**data)
     db.add(db_flight)
@@ -33,16 +40,15 @@ def create_flight(db: Session, flight: schemas.FlightCreate):
     db.refresh(db_flight)
     return db_flight
 
-# перевод координатов и времени
 def convert_flight_for_response(flight: models.Flight) -> dict:
     """
     Преобразует объект Flight из базы в формат, подходящий для Pydantic:
-    - координаты → WKT строки
+    - координаты (dep_coord, dest_coord, route_coords) → WKT строки
     - duration → timedelta
     """
     result = flight.__dict__.copy()
 
-    # Геометрия
+    # Конвертация геометрии в WKT
     for geom_field in ["dep_coord", "dest_coord", "route_coords"]:
         value = getattr(flight, geom_field)
         if value is not None:
@@ -51,7 +57,7 @@ def convert_flight_for_response(flight: models.Flight) -> dict:
         else:
             result[geom_field] = None
 
-    # Продолжительность
+    # Конвертация времени полета
     duration_value = getattr(flight, "duration")
     if isinstance(duration_value, time):
         result["duration"] = timedelta(
@@ -64,7 +70,12 @@ def convert_flight_for_response(flight: models.Flight) -> dict:
 
     return result
 
+# --- Работа с регионами ---
+
 def get_region_by_point(db: Session, lon: float, lat: float):
+    """
+    Определяет регион по координатам точки (lon, lat)
+    """
     point = f"POINT({lon} {lat})"
     region = db.query(models.Region).filter(
         models.Region.geom.ST_Contains(point)
@@ -72,27 +83,43 @@ def get_region_by_point(db: Session, lon: float, lat: float):
     return region
 
 def get_region_by_city(db: Session, city: str):
+    """
+    Определяет регион по городу, используя координаты взлета первого рейса в этом городе.
+    """
     flight = db.query(models.Flight).filter(models.Flight.city == city).first()
     if not flight:
         return None
 
-    # берем координаты взлета
+    # Получаем координаты взлета
     dep_coord = db.scalar(func.ST_AsText(flight.dep_coord))
     lon, lat = dep_coord.replace("POINT(", "").replace(")", "").split()
 
     return get_region_by_point(db, float(lon), float(lat))
 
+# --- Получение рейсов ---
+
 def get_flights(db: Session, skip: int = 0, limit: int = 100):
+    """
+    Возвращает список рейсов с возможностью пагинации.
+    Результат конвертируется в формат, подходящий для Pydantic.
+    """
     flights = db.query(models.Flight).offset(skip).limit(limit).all()
-    # конвертируем для Pydantic
     return [convert_flight_for_response(f) for f in flights]
 
-# функция перевода в json для работы с leaflet и фронтом
+# --- Конвертация рейса в GeoJSON для фронтенда и Leaflet ---
+
 def flight_to_geojson(flight):
+    """
+    Преобразует рейс в список GeoJSON features:
+    - dep_coord → точка вылета
+    - dest_coord → точка назначения
+    - route_coords → маршрут (линия)
+    """
     features = []
 
+    # Точка вылета
     if flight.dep_coord:
-        geom = to_shape(flight.dep_coord)  # WKB → shapely geometry
+        geom = to_shape(flight.dep_coord)  # WKB → shapely
         features.append({
             "type": "Feature",
             "geometry": mapping(geom),      # shapely → GeoJSON
@@ -103,6 +130,7 @@ def flight_to_geojson(flight):
             }
         })
 
+    # Точка назначения
     if flight.dest_coord:
         geom = to_shape(flight.dest_coord)
         features.append({
@@ -114,6 +142,7 @@ def flight_to_geojson(flight):
             }
         })
 
+    # Маршрут
     if flight.route_coords:
         geom = to_shape(flight.route_coords)
         features.append({

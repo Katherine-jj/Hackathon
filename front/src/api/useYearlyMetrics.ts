@@ -28,7 +28,7 @@ export const useYearlyMetrics = (filters?: {
       if (filters?.startDate) params.append("startDate", filters.startDate);
       if (filters?.endDate) params.append("endDate", filters.endDate);
 
-      const url = `http://127.0.0.1:8000/flights/stats/yearly?${params.toString()}`;
+      const url = `http://localhost:8000/flights/stats/yearly?${params.toString()}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error("Ошибка при загрузке статистики по месяцам");
 
